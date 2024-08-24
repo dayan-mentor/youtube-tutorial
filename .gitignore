@@ -1,0 +1,87 @@
+# Node modules (Angular)
+node_modules/
+
+# Angular build output
+dist/
+*.tgz
+
+# TypeScript build output
+*.tsbuildinfo
+*.js
+*.js.map
+
+# Angular environment files
+src/environments/
+
+# ASP.NET Core files
+*.csproj.user
+*.suo
+*.user
+*.userosscache
+*.suo
+*.log
+project.lock.json
+project.fragment.lock.json
+
+# ASP.NET Core build output
+/bin/
+obj/
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+.nuget/
+# Uncomment if you have a NuGet.config file
+# !nuget.config
+
+# Visual Studio Code settings
+.vscode/
+.vs/
+bin/
+
+# Rider settings
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# JetBrains Rider
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Environment Variables
+.env
+
+# Logs
+logs/
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Local database files
+*.sqlite
+*.db
+
+# Coverage and test results
+coverage/
+*.lcov
+*.coverage
+*.testresults
+
+# Build and dependency management tools
+*.iml
+*.sublime-project
+*.sublime-workspace
+
+# npm and yarn cache
+npm-debug.log
+yarn-error.log
+*.yarn-cache/
+
+# GitHub specific
+*.github/
