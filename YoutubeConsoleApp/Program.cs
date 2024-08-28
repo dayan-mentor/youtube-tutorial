@@ -1,102 +1,101 @@
-﻿class Program
+﻿// Define a base class 'Person'
+public class Person
 {
-    // Main method: the entry point of the program
+    // Encapsulation: Private fields
+    private string _name;
+    private int _age;
+
+    // Properties to access the private fields (with getters and setters)
+    public string Name
+    {
+        get { return _name; }
+        set { _name = value; }
+    }
+
+    public int Age
+    {
+        get { return _age; }
+        set { _age = value; }
+    }
+
+    // Constructor to initialize the fields
+    public Person(string name, int age)
+    {
+        _name = name;
+        _age = age;
+    }
+
+    // Virtual method to demonstrate polymorphism
+    public virtual void DisplayInfo()
+    {
+        Console.WriteLine($"Name: {_name}, Age: {_age}");
+    }
+}
+
+// Define a derived class 'Employee' that inherits from 'Person'
+public class Employee : Person
+{
+    // Additional property specific to Employee
+    public double Salary { get; set; }
+
+    // Constructor that uses the base class constructor
+    public Employee(string name, int age, double salary) : base(name, age)
+    {
+        Salary = salary;
+    }
+
+    // Overriding the base class method to demonstrate polymorphism
+    public override void DisplayInfo()
+    {
+        Console.WriteLine($"Name: {Name}, Age: {Age}, Salary: {Salary}");
+    }
+}
+
+// Interface definition for demonstrating abstraction
+public interface IWorkable
+{
+    void Work();
+}
+
+// Another derived class 'Manager' that inherits from 'Employee' and implements the interface
+public class Manager : Employee, IWorkable
+{
+    public Manager(string name, int age, double salary) : base(name, age, salary) { }
+
+    // Implementing the Work method from the IWorkable interface
+    public void Work()
+    {
+        Console.WriteLine($"{Name} is managing the team.");
+    }
+
+    // Overriding the DisplayInfo method to show manager-specific information
+    public override void DisplayInfo()
+    {
+        Console.WriteLine($"[Manager] Name: {Name}, Age: {Age}, Salary: {Salary}");
+    }
+}
+
+class Program
+{
     static void Main(string[] args)
     {
-        // Variables and Data Types
-        int age = 38; // Integer variable
-        double salary = 50000.50; // Double variable (floating-point number)
-        string name = "John Doe"; // String variable
-        bool isEmployed = true; // Boolean variable
+        // Creating objects (instances) of the Person and Employee classes
+        Person person = new Person("Alice", 30);
+        Employee employee = new Employee("Bob", 25, 50000);
+        Manager manager = new Manager("Charlie", 40, 80000);
 
-        // Output variables to the console
-        Console.WriteLine("Name: " + name);
-        Console.WriteLine("Age: " + age);
-        Console.WriteLine("Salary: $" + salary);
-        Console.WriteLine("Employed: " + isEmployed);
+        // Demonstrating Encapsulation and Polymorphism
+        person.DisplayInfo();  // Output: Name: Alice, Age: 30
+        employee.DisplayInfo(); // Output: Name: Bob, Age: 25, Salary: 50000
+        manager.DisplayInfo();  // Output: [Manager] Name: Charlie, Age: 40, Salary: 80000
 
-        // Basic Operations
-        int a = 10;
-        int b = 20;
-        int sum = a + b; // Addition
-        int product = a * b; // Multiplication
-        int average = b / a; // Division
+        // Demonstrating Abstraction through Interface
+        IWorkable workableManager = manager;
+        workableManager.Work(); // Output: Charlie is managing the team.
 
-        Console.WriteLine("Sum: " + sum);
-        Console.WriteLine("Product: " + product);
-        Console.WriteLine("Average: " + average);
-
-        // Control Structures
-        if (age > 18)
-        {
-            Console.WriteLine("You are an adult.");
-        }
-        else
-        {
-            Console.WriteLine("You are not an adult.");
-        }
-
-        // Switch statement example
-        switch (age)
-        {
-            case 18:
-                Console.WriteLine("You just became an adult!");
-                break;
-            case 25:
-                Console.WriteLine("You are in your mid-twenties.");
-                break;
-            default:
-                Console.WriteLine("Age is just a number.");
-                break;
-        }
-
-        // For Loops
-        Console.WriteLine("For Loops - Counting from 1 to 5:");
-        for (int y = 1; y <= 5; y++)
-        {
-            Console.WriteLine(y);
-        }
-
-        // While Loop
-        Console.WriteLine("While Loops");
-        int i = 6;
-        while (i <= 5)
-        {
-            Console.WriteLine(i);
-            i++;
-        }
-
-        // Do-While Loop
-        Console.WriteLine("Do-While Loops");
-        int x = 6;
-        do
-        {
-            Console.WriteLine(i);
-            x++;
-        }
-        while (x <= 5);
-
-        // Methods and Functions
-        int number1 = 5;
-        int number2 = 3;
-        int result = AddNumbers(number1, number2); // Call the method
-        Console.WriteLine("Sum of " + number1 + " and " + number2 + " is: " + result);
-
-        // Calling a function with a return value
-        double area = CalculateCircleArea(5.0); // Call the method
-        Console.WriteLine("Area of a circle with radius 5: " + area);
-    }
-
-    // Method to add two numbers
-    static int AddNumbers(int x, int y)
-    {
-        return x + y; // Return the sum of x and y
-    }
-
-    // Method to calculate the area of a circle
-    static double CalculateCircleArea(double radius)
-    {
-        double area = Math.PI * radius * radius;
-        return area; // Return the calculated area
+        // Demonstrating Inheritance and Method Overriding
+        Console.WriteLine("\n--- Inheritance and Overriding ---");
+        Employee emp = new Manager("David", 35, 90000);
+        emp.DisplayInfo(); // Output: [Manager] Name: David, Age: 35, Salary: 90000
     }
 }
