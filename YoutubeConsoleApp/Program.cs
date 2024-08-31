@@ -1,66 +1,91 @@
-﻿class Program
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class Program
 {
     static void Main(string[] args)
     {
-        // 1. List<T> Example
-        List<string> fruits = new List<string> { "Apple", "Banana", "Cherry" };
-        fruits.Add("Date");
-        fruits.Remove("Banana");
-
-        Console.WriteLine("List of Fruits:");
-        foreach (var fruit in fruits)
+        // Sample data
+        List<Student> students = new List<Student>
         {
-            Console.WriteLine(fruit);
-        }
-
-        // 2. Dictionary<TKey, TValue> Example
-        Dictionary<int, string> studentDictionary = new Dictionary<int, string>
-        {
-            { 1, "Alice" },
-            { 2, "Bob" },
-            { 3, "Charlie" }
+            new Student { Id = 1, Name = "Alice", Age = 20, Grade = 85 },
+            new Student { Id = 2, Name = "Bob", Age = 22, Grade = 90 },
+            new Student { Id = 3, Name = "Charlie", Age = 19, Grade = 75 },
+            new Student { Id = 4, Name = "David", Age = 21, Grade = 88 },
+            new Student { Id = 5, Name = "Eve", Age = 20, Grade = 92 }
         };
 
-        Console.WriteLine("\nStudent with ID 2: " + studentDictionary[2]);
+        // 1. Basic LINQ Query - Filtering
+        var highScorers = from s in students
+                          where s.Grade > 80
+                          select s;
 
-        // 3. HashSet<T> Example
-        HashSet<int> uniqueNumbers = new HashSet<int> { 1, 2, 3, 2, 1 };
-        uniqueNumbers.Add(4);
-
-        Console.WriteLine("\nUnique Numbers:");
-        foreach (var number in uniqueNumbers)
+        Console.WriteLine("Students with Grade > 80:");
+        foreach (var student in highScorers)
         {
-            Console.WriteLine(number);
+            Console.WriteLine($"Name: {student.Name}, Grade: {student.Grade}");
         }
 
-        // 4. Queue<T> Example
-        Queue<string> queue = new Queue<string>();
-        queue.Enqueue("First");
-        queue.Enqueue("Second");
-        queue.Enqueue("Third");
-
-        Console.WriteLine("\nQueue Dequeue: " + queue.Dequeue()); // Removes "First"
-
-        // 5. Stack<T> Example
-        Stack<string> stack = new Stack<string>();
-        stack.Push("Bottom");
-        stack.Push("Middle");
-        stack.Push("Top");
-
-        Console.WriteLine("\nStack Pop: " + stack.Pop()); // Removes "Top"
-
-        // 6. Generic Method Example
-        Console.WriteLine("\nGeneric Method Example:");
-        PrintItems(fruits);
-        PrintItems(uniqueNumbers);
-    }
-
-    // Generic Method to print any collection
-    static void PrintItems<T>(IEnumerable<T> items)
-    {
-        foreach (var item in items)
+        // 2. LINQ Method Syntax - Sorting
+        var sortedStudents = students.OrderBy(s => s.Age).ToList();
+        Console.WriteLine("\nStudents sorted by Age:");
+        foreach (var student in sortedStudents)
         {
-            Console.WriteLine(item);
+            Console.WriteLine($"Name: {student.Name}, Age: {student.Age}");
+        }
+
+        // 3. LINQ Projection - Selecting specific properties
+        var studentNames = students.Select(s => s.Name).ToList();
+        Console.WriteLine("\nStudent Names:");
+        foreach (var name in studentNames)
+        {
+            Console.WriteLine(name);
+        }
+
+        // 4. LINQ Grouping
+        var studentsGroupedByAge = students.GroupBy(s => s.Age);
+        Console.WriteLine("\nStudents grouped by Age:");
+        foreach (var group in studentsGroupedByAge)
+        {
+            Console.WriteLine($"Age: {group.Key}");
+            foreach (var student in group)
+            {
+                Console.WriteLine($"  Name: {student.Name}, Grade: {student.Grade}");
+            }
+        }
+
+        // 5. LINQ Joining Example
+        List<Course> courses = new List<Course>
+        {
+            new Course { StudentId = 1, CourseName = "Math" },
+            new Course { StudentId = 2, CourseName = "Science" },
+            new Course { StudentId = 3, CourseName = "History" },
+            new Course { StudentId = 4, CourseName = "Math" }
+        };
+
+        var studentCourses = from s in students
+                             join c in courses on s.Id equals c.StudentId
+                             select new { s.Name, c.CourseName };
+
+        Console.WriteLine("\nStudent Course Enrollments:");
+        foreach (var sc in studentCourses)
+        {
+            Console.WriteLine($"Name: {sc.Name}, Course: {sc.CourseName}");
         }
     }
+}
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public int Grade { get; set; }
+}
+
+public class Course
+{
+    public int StudentId { get; set; }
+    public string CourseName { get; set; }
 }
