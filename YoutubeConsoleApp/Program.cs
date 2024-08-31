@@ -1,91 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
-        // Sample data
-        List<Student> students = new List<Student>
-        {
-            new Student { Id = 1, Name = "Alice", Age = 20, Grade = 85 },
-            new Student { Id = 2, Name = "Bob", Age = 22, Grade = 90 },
-            new Student { Id = 3, Name = "Charlie", Age = 19, Grade = 75 },
-            new Student { Id = 4, Name = "David", Age = 21, Grade = 88 },
-            new Student { Id = 5, Name = "Eve", Age = 20, Grade = 92 }
-        };
+        Console.WriteLine("Starting asynchronous operations...");
 
-        // 1. Basic LINQ Query - Filtering
-        var highScorers = from s in students
-                          where s.Grade > 80
-                          select s;
+        // 1. Calling an asynchronous method
+        await PerformAsyncOperations();
 
-        Console.WriteLine("Students with Grade > 80:");
-        foreach (var student in highScorers)
-        {
-            Console.WriteLine($"Name: {student.Name}, Grade: {student.Grade}");
-        }
+        Console.WriteLine("Asynchronous operations completed.");
+    }
 
-        // 2. LINQ Method Syntax - Sorting
-        var sortedStudents = students.OrderBy(s => s.Age).ToList();
-        Console.WriteLine("\nStudents sorted by Age:");
-        foreach (var student in sortedStudents)
+    // An example asynchronous method
+    static async Task PerformAsyncOperations()
+    {
+        // 2. Performing an asynchronous HTTP request
+        using (HttpClient httpClient = new HttpClient())
         {
-            Console.WriteLine($"Name: {student.Name}, Age: {student.Age}");
-        }
-
-        // 3. LINQ Projection - Selecting specific properties
-        var studentNames = students.Select(s => s.Name).ToList();
-        Console.WriteLine("\nStudent Names:");
-        foreach (var name in studentNames)
-        {
-            Console.WriteLine(name);
-        }
-
-        // 4. LINQ Grouping
-        var studentsGroupedByAge = students.GroupBy(s => s.Age);
-        Console.WriteLine("\nStudents grouped by Age:");
-        foreach (var group in studentsGroupedByAge)
-        {
-            Console.WriteLine($"Age: {group.Key}");
-            foreach (var student in group)
+            try
             {
-                Console.WriteLine($"  Name: {student.Name}, Grade: {student.Grade}");
+                string url = "https://jsonplaceholder.typicode.com/posts";
+                Console.WriteLine($"Fetching data from {url}...");
+
+                // Awaiting the async operation
+                string result = await httpClient.GetStringAsync(url);
+
+                Console.WriteLine("Data fetched successfully!");
+                Console.WriteLine(result.Substring(0, 100) + "..."); // Display first 100 characters
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
 
-        // 5. LINQ Joining Example
-        List<Course> courses = new List<Course>
-        {
-            new Course { StudentId = 1, CourseName = "Math" },
-            new Course { StudentId = 2, CourseName = "Science" },
-            new Course { StudentId = 3, CourseName = "History" },
-            new Course { StudentId = 4, CourseName = "Math" }
-        };
+        // 3. Simulating an asynchronous file write operation
+        await WriteToFileAsync("output.txt", "Hello, world!");
 
-        var studentCourses = from s in students
-                             join c in courses on s.Id equals c.StudentId
-                             select new { s.Name, c.CourseName };
+        Console.WriteLine("File write operation completed.");
+    }
 
-        Console.WriteLine("\nStudent Course Enrollments:");
-        foreach (var sc in studentCourses)
+    // An example of an asynchronous file write operation
+    static async Task WriteToFileAsync(string filePath, string content)
+    {
+        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
         {
-            Console.WriteLine($"Name: {sc.Name}, Course: {sc.CourseName}");
+            await writer.WriteLineAsync(content);
         }
     }
-}
-
-public class Student
-{
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public int Age { get; set; }
-    public int Grade { get; set; }
-}
-
-public class Course
-{
-    public int StudentId { get; set; }
-    public string CourseName { get; set; }
 }
