@@ -1,54 +1,68 @@
 ﻿using System;
-using System.Net.Http;
+using System.IO;
 using System.Threading.Tasks;
 
 class Program
 {
     static async Task Main(string[] args)
     {
-        Console.WriteLine("Starting asynchronous operations...");
+        Console.WriteLine("Starting application...");
 
-        // 1. Calling an asynchronous method
-        await PerformAsyncOperations();
-
-        Console.WriteLine("Asynchronous operations completed.");
-    }
-
-    // An example asynchronous method
-    static async Task PerformAsyncOperations()
-    {
-        // 2. Performing an asynchronous HTTP request
-        using (HttpClient httpClient = new HttpClient())
+        try
         {
-            try
-            {
-                string url = "https://jsonplaceholder.typicode.com/posts";
-                Console.WriteLine($"Fetching data from {url}...");
-
-                // Awaiting the async operation
-                string result = await httpClient.GetStringAsync(url);
-
-                Console.WriteLine("Data fetched successfully!");
-                Console.WriteLine(result.Substring(0, 100) + "..."); // Display first 100 characters
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred: {ex.Message}");
-            }
+            // Example of file reading with exception handling
+            string filePath = "example.txt";
+            string content = await ReadFileAsync(filePath);
+            Console.WriteLine($"File content: {content}");
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine($"File not found: {ex.Message}");
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine($"I/O error: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+        }
+        finally
+        {
+            Console.WriteLine("Cleaning up resources...");
+            // Code to clean up resources, if necessary
         }
 
-        // 3. Simulating an asynchronous file write operation
-        await WriteToFileAsync("output.txt", "Hello, world!");
-
-        Console.WriteLine("File write operation completed.");
+        Console.WriteLine("Application completed.");
     }
 
-    // An example of an asynchronous file write operation
-    static async Task WriteToFileAsync(string filePath, string content)
+    // Asynchronous method for reading a file
+    static async Task<string> ReadFileAsync(string path)
     {
-        using (System.IO.StreamWriter writer = new System.IO.StreamWriter(filePath))
+        if (string.IsNullOrEmpty(path))
         {
-            await writer.WriteLineAsync(content);
+            throw new ArgumentException("File path cannot be null or empty", nameof(path));
+        }
+
+        try
+        {
+            using (StreamReader reader = new StreamReader(path))
+            {
+                return await reader.ReadToEndAsync();
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            // Handle specific exception
+            Console.WriteLine($"Argument error: {ex.Message}");
+            throw; // Re-throwing the exception
         }
     }
+}
+
+public class CustomException : Exception
+{
+    public CustomException(string message) : base(message) { }
+
+    public CustomException(string message, Exception innerException) : base(message, innerException) { }
 }
